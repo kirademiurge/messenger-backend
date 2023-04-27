@@ -116,11 +116,11 @@ export const userService = {
 	},
 
 	async deleteManyAsAdmin(body: any) {
-		const user = await prisma.user.deleteMany({
+		const users = await prisma.user.deleteMany({
 			where: {
 				id: { in: body.ids },
 			},
 		});
-		return user;
+		return users;
 	},
 }
