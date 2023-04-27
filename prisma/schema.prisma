@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int       @id @default(autoincrement())
+  username         String    @unique
+  name             String
+  password         String
+  role             String    @default("USER")
+  color            String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  avapic           String?
+  bio              String?
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+}
+
+model Message {
+  id                 Int       @id @default(autoincrement())
+  senderId           Int
+  sender             User      @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId         Int
+  receiver           User      @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  body               String
+  sentTime           DateTime  @default(now())
+  isDeleted          Boolean   @default(false)
+  isChecked          Boolean   @default(false)
+  editedBody         String?
+  reactions          String?
+  forwardedMessageId Int?
+  forwardedMessage   Message?  @relation("ForwardedMessage", fields: [forwardedMessageId], references: [id])
+  repliedMessageId   Int?
+  repliedMessage     Message?  @relation("RepliedMessage", fields: [repliedMessageId], references: [id])
+  forwardedMessages  Message[] @relation("ForwardedMessage")
+  repliedMessages    Message[] @relation("RepliedMessage")
+}
