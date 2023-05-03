@@ -7,7 +7,8 @@ export const userRouter = Router();
 
 // USER COMMANDS
 userRouter.get("/getOne", [authMiddleware.isValideJwt], userController.getOne);
-// userRouter.patch("/edit", [authMiddleware.isValideJwt], userController.edit);
+userRouter.get("/getAll", [authMiddleware.isValideJwt], userController.getAll);
+userRouter.patch("/edit", [authMiddleware.isValideJwt], userController.edit);
 
 // ADMIN COMMANDS
 userRouter.get("/getAllAsAdmin", [authMiddleware.isValideJwt, userMiddleware.idAdminRole], userController.getAllAsAdmin);
