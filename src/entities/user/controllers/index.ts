@@ -13,6 +13,16 @@ export const userController = {
     }
   },
 
+  async getAll(req: Request, res: Response) {
+    try {
+      const body = await userService.getAll(req.body);
+      res.json({body: body});
+
+    } catch (error) {
+      res.json({error: error});
+    }
+  },
+
   async edit(req: Request, res: Response) {
     try {
       const body = await userService.edit(req.body);
