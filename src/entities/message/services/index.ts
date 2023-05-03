@@ -8,15 +8,52 @@ export const messageService = {
 
 	// USER COMMANDS
 	async create(body: any) {
+		if (!body.body) throw new Error("message is empty");
+	
 		const message = await prisma.message.create({
 			data: {
 				senderId: body.payload.id,
 				receiverId: body.id,
-				body: body.body,
+				body: body.body && undefined,
 				repliedMessageId: body.repliedMessageId,
 			},
 		});
 		return message;
+	},
+
+	async getAll(body: any) {
+		const messages = await prisma.message.findMany({
+			where: {
+				OR: [
+					{ sender: { id: body.payload.id } },
+					{ receiver: { id: body.payload.id } },
+				],
+			},
+			include: {
+				sender: true,
+				receiver: true,
+			},
+		});
+
+		return messages;
+	},
+
+	async getNew(body: any) {
+		const messages = await prisma.message.findMany({
+			where: {
+				isChecked: false,
+				OR: [
+					{ sender: { id: body.payload.id } },
+					{ receiver: { id: body.payload.id } },
+				],
+			},
+			include: {
+				sender: true,
+				receiver: true,
+			},
+		});
+
+		return messages;
 	},
 
 	async delete(body: any) {
@@ -62,6 +99,11 @@ export const messageService = {
 	},
 
 	// ADMIN COMMANDS
+	async getAllAsAdmin(body: any) {
+		const messages = await prisma.message.findMany();
+		return messages;
+	},
+
 	async deleteAsAdmin(body: any) {
 		const message = await prisma.message.delete({
 			where: {
