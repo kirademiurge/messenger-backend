@@ -13,6 +13,26 @@ export const messageController = {
     }
   },
 
+  async getAll(req: Request, res: Response) {
+    try {
+      const body = await messageService.getAll(req.body);
+      res.json({body: body});
+
+    } catch (error) {
+      res.json({error: error});
+    }
+  },
+
+  async getNew(req: Request, res: Response) {
+    try {
+      const body = await messageService.getNew(req.body);
+      res.json({body: body});
+
+    } catch (error) {
+      res.json({error: error});
+    }
+  },
+
   async delete(req: Request, res: Response) {
     try {
       const body = await messageService.delete(req.body);
@@ -54,6 +74,16 @@ export const messageController = {
   },
 
   // ADMIN COMMANDS
+  async getAllAsAdmin(req: Request, res: Response) {
+    try {
+      const body = await messageService.getAllAsAdmin(req.body);
+      res.json({body: body});
+
+    } catch (error) {
+      res.json({error: error});
+    }
+  },
+
   async editAsAdmin(req: Request, res: Response) {
     try {
       const body = await messageService.editAsAdmin(req.body);
