@@ -5,5 +5,5 @@ import { userMiddleware } from "../../user";
 
 export const authRouter = Router();
 
-// authRouter.post("/register", [userMiddleware.isUserNotExist], authController.register);
-authRouter.post("/login", [userMiddleware.isUserExist, authMiddleware.isPasswordValid], authController.login);
+authRouter.post("/register", authController.register);
+authRouter.post("/login", [authMiddleware.isPasswordValid], authController.login);
