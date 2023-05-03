@@ -39,6 +39,32 @@ export const userService = {
 		return user;
 	},
 
+	async getAll(body: any) {
+		const messages = await prisma.message.findMany({
+			where: {
+				OR: [
+					{ sender: { id: body.payload.id } },
+					{ receiver: { id: body.payload.id } },
+				],
+			},
+			include: {
+				sender: true,
+				receiver: true,
+			},
+		});
+
+		const users = messages.map( (message) => {
+			if (message.sender.id === body.payload.id) return message.receiver;
+			return message.sender;
+		});
+
+		const uniqueUsers = users.filter( (user, index) => {
+			return users.findIndex( (elem) => elem.id === user.id ) === index;
+		});
+
+		return uniqueUsers;
+	},
+
 	async edit(body: any) {
 		const user = await prisma.user.update({
 			where: {
