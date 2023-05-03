@@ -1,11 +1,17 @@
 import { Request, Response, NextFunction } from "express";
+import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { config } from "../../../shared";
+
+const prisma = new PrismaClient();
 
 export const authMiddleware = {
 	async isPasswordValid (req:Request, res: Response, next: NextFunction) {
 		try {
-			const user = req.body.foundUser;
+			const user = await prisma.user.findUniqueOrThrow({
+				where: { username: req.body.username },
+			});
+			req.body.foundUser = user;
 			if (user.password === req.body.password) next();
 			else throw new Error("password is wrong");
 
